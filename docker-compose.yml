@@ -14,6 +14,9 @@ services:
       MYSQL_USER: misp
       MYSQL_PASSWORD: password # Please change for production
       MYSQL_ROOT_PASSWORD: password # Please change for production
+    networks:
+      - iris_backend
+      - iris_frontend
 
   redis:
     image: redis:7.2
@@ -21,6 +24,9 @@ services:
     container_name: misp-redis
     volumes:
       - ./misp-redis-data/redis_data:/data
+    networks:
+      - iris_backend
+      - iris_frontend
 
   misp-modules:
     image: ghcr.io/nukib/misp-modules:latest
@@ -33,6 +39,9 @@ services:
       - NET_BIND_SERVICE
       - AUDIT_WRITE
       - SETFCAP
+    networks:
+      - iris_backend
+      - iris_frontend
 
   misp:
     image: ${MISP_IMAGE-ghcr.io/nukib/misp:latest}
@@ -74,3 +83,6 @@ services:
     ports:
       - "8081:80"
       - "5605:50000"
+    networks:
+      - iris_backend
+      - iris_frontend
