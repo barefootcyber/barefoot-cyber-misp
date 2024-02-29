@@ -1,26 +1,26 @@
 version: '3.3'
 
 services:
-  misp-db:
+  mysql:
     image: mariadb:11.3
     restart: always
     container_name: misp-mysql
     tmpfs:
       - /tmp
     volumes:
-      - /mnt/IRCMM/barefoot-cyber-misp/data/db:/var/lib/mysql
+      - ./misp-db-data/mysql_data:/var/lib/mysql
     environment:
       MYSQL_DATABASE: misp
       MYSQL_USER: misp
       MYSQL_PASSWORD: password # Please change for production
       MYSQL_ROOT_PASSWORD: password # Please change for production
 
-  misp-redis:
+  redis:
     image: redis:7.2
     restart: always
     container_name: misp-redis
     volumes:
-      - /mnt/IRCMM/barefoot-cyber-misp/data/redis_data:/data
+      - ./misp-redis-data/redis_data:/data
 
   misp-modules:
     image: ghcr.io/nukib/misp-modules:latest
@@ -39,8 +39,8 @@ services:
     restart: always
     container_name: misp
     depends_on:
-      - misp-db
-      - misp-redis
+      - mysql
+      - redis
     tmpfs:
       - /tmp
     cap_drop:
@@ -50,12 +50,12 @@ services:
       - AUDIT_WRITE
       - SETFCAP
     environment:
-      MYSQL_HOST: misp-db
+      MYSQL_HOST: mysql
       MYSQL_LOGIN: misp
       MYSQL_PASSWORD: password # Please change for production
       MYSQL_DATABASE: misp
-      REDIS_HOST: misp-redis
-      MISP_BASEURL: http://ircmm.armada247.com:8081
+      REDIS_HOST: redis
+      MISP_BASEURL: http://localhost:8081
       MISP_UUID: 0a674a5a-c4cb-491d-80cf-5adb48b5c1cd # Please change for production
       MISP_ORG: Testing org # Please change for production
       MISP_MODULE_URL: http://misp-modules
@@ -66,12 +66,11 @@ services:
       ECS_LOG_ENABLED: yes
       MISP_DEBUG: yes
     volumes:
-      - /mnt/IRCMM/barefoot-cyber-misp/misp_logs:/var/www/MISP/app/tmp/logs/
-      - /mnt/IRCMM/barefoot-cyber-misp/misp_certs:/var/www/MISP/app/files/certs/
-      - /mnt/IRCMM/barefoot-cyber-misp/misp_attachments:/var/www/MISP/app/attachments/
-      - /mnt/IRCMM/barefoot-cyber-misp/misp_img_orgs:/var/www/MISP/app/files/img/orgs/
-      - /mnt/IRCMM/barefoot-cyber-misp/misp_img_custom:/var/www/MISP/app/files/img/custom/
-      - /mnt/IRCMM/barefoot-cyber-misp/misp_gnupg:/var/www/MISP/.gnupg/
+      - ./misp-core-data/misp_logs:/var/www/MISP/app/tmp/logs/
+      - ./misp-core-data/misp_certs:/var/www/MISP/app/files/certs/
+      - ./misp-core-data/misp_attachments:/var/www/MISP/app/attachments/
+      - ./misp-core-data/misp_img_custom:/var/www/MISP/app/files/img/custom/
+      - ./misp-core-data/misp_gnupg:/var/www/MISP/.gnupg/
     ports:
       - "8081:80"
       - "5605:50000"
