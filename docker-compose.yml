@@ -18,8 +18,8 @@ services:
     environment:
       MYSQL_DATABASE: misp
       MYSQL_USER: misp
-      MYSQL_PASSWORD: ^zLxvWP$vj%5rN93fi2%Bq # Please change for production
-      MYSQL_ROOT_PASSWORD: ^zLxvWP$vj%5rN93fi2%Bq # Please change for production
+      MYSQL_PASSWORD: password # Please change for production
+      MYSQL_ROOT_PASSWORD: password # Please change for production
     networks:
       - iris_backend
       - iris_frontend
@@ -79,7 +79,7 @@ services:
     environment:
       MYSQL_HOST: mysql
       MYSQL_LOGIN: misp
-      MYSQL_PASSWORD: ^zLxvWP$vj%5rN93fi2%Bq # Please change for production
+      MYSQL_PASSWORD: password # Please change for production
       MYSQL_DATABASE: misp
       REDIS_HOST: redis
       MISP_BASEURL: https://ircmm.armada247.com:5602
