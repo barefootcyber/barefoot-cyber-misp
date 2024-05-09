@@ -3,6 +3,12 @@ version: '3.3'
 services:
   mysql:
     image: mariadb:11.3
+    deploy:
+      resources:
+        limits:
+          memory: 1536M  # Set the memory limit as needed
+        reservations:
+          memory: 1536M  # Set the reserved memory as needed
     restart: always
     container_name: misp-mysql
     tmpfs:
@@ -20,6 +26,12 @@ services:
 
   redis:
     image: redis:7.2
+    deploy:
+      resources:
+        limits:
+          memory: 512M  # Set the memory limit as needed
+        reservations:
+          memory: 512M  # Set the reserved memory as needed
     restart: always
     container_name: misp-redis
     volumes:
@@ -45,6 +57,12 @@ services:
 
   misp:
     image: ${MISP_IMAGE-ghcr.io/nukib/misp:latest}
+    deploy:
+      resources:
+        limits:
+          memory: 1536M  # Set the memory limit as needed
+        reservations:
+          memory: 1536M  # Set the reserved memory as needed
     restart: always
     container_name: misp
     depends_on:
